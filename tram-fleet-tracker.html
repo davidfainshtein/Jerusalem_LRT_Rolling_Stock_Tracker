@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0d1117">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Fleet Tracker">
+<meta name="description" content="Tram rolling stock fleet tracker — 160 units">
+<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Tram%20Fleet%20Tracker%22%2C%22short_name%22%3A%22Fleet%22%2C%22description%22%3A%22Tram%20rolling%20stock%20tracker%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230d1117%22%2C%22theme_color%22%3A%22%230d1117%22%2C%22orientation%22%3A%22portrait-primary%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%3D%270%200%20512%20512%2527%253E%253Crect%2520width%3D%2527512%2527%2520height%3D%2527512%2527%2520rx%3D%2527100%2527%2520fill%3D%2527%25230d1117%2527%2F%253E%253Ctext%2520x%3D%2527256%2527%2520y%3D%2527340%2527%2520font-size%3D%2527300%2527%2520text-anchor%3D%2527middle%2527%253E%25F0%259F%259A%2583%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+<title>Tram Fleet Tracker</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+  :root {
+    --bg: #0d1117;
+    --panel: #161b22;
+    --border: #21262d;
+    --citadis: #00b4d8;
+    --citadis-dim: #003d4d;
+    --urbos: #f77f00;
+    --urbos-dim: #4d2900;
+    --accent: #238636;
+    --text: #c9d1d9;
+    --text-dim: #6e7681;
+    --coupled: #3fb950;
+    --uncoupled: #8b949e;
+    --error: #f85149;
+    --card-h: 58px;
+    --safe-top: env(safe-area-inset-top, 0px);
+    --safe-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    min-height: 100vh;
+    padding: calc(var(--safe-top) + 20px) 16px calc(var(--safe-bottom) + 20px);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: pan-y;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 32px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .title-block h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1;
+  }
+
+  .title-block p {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    margin-top: 4px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .stats {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 16px;
+    text-align: center;
+    min-width: 90px;
+  }
+
+  .stat-val {
+    font-size: 1.6rem;
+    font-weight: 700;
+    font-family: 'Share Tech Mono', monospace;
+    line-height: 1;
+  }
+
+  .stat-val.citadis { color: var(--citadis); }
+  .stat-val.urbos   { color: var(--urbos); }
+  .stat-val.ok      { color: var(--coupled); }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-top: 3px;
+  }
+
+  /* ── CONTROLS ── */
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+    align-items: center;
+  }
+
+  .controls label {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .btn {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 9px 14px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: border-color 0.15s, background 0.15s;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  .btn:hover { border-color: var(--text-dim); background: #1e242d; }
+  .btn.danger { border-color: var(--error); color: var(--error); }
+  .btn.danger:hover { background: #2d1517; }
+
+  /* ── FLEET GRID ── */
+  .fleet-section {
+    margin-bottom: 36px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .section-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .model-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.72rem;
+    padding: 2px 8px;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  .badge-citadis {
+    background: var(--citadis-dim);
+    color: var(--citadis);
+    border: 1px solid var(--citadis);
+  }
+
+  .badge-urbos {
+    background: var(--urbos-dim);
+    color: var(--urbos);
+    border: 1px solid var(--urbos);
+  }
+
+  .tram-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 6px;
+  }
+
+  /* ── TRAM CARD ── */
+  .tram-card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    height: var(--card-h);
+    padding: 0 10px;
+    gap: 8px;
+    transition: border-color 0.15s, background 0.15s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .tram-card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .citadis-card::before { background: var(--citadis); }
+  .urbos-card::before   { background: var(--urbos); }
+
+  .tram-card:hover { border-color: var(--text-dim); }
+
+  /* checkbox */
+  .tram-check {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 22px; height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 3px;
+    flex-shrink: 0;
+    cursor: pointer;
+    background: var(--bg);
+    transition: background 0.12s, border-color 0.12s;
+    position: relative;
+    touch-action: manipulation;
+  }
+
+  .tram-check:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .tram-check:checked::after {
+    content: '';
+    position: absolute;
+    left: 5px; top: 2px;
+    width: 6px; height: 10px;
+    border: 2px solid #fff;
+    border-top: none;
+    border-left: none;
+    transform: rotate(42deg);
+  }
+
+  .tram-num {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    flex: 1;
+    color: var(--text);
+  }
+
+  /* couple controls */
+  .couple-wrap {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+  }
+
+  .couple-badge {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.75rem;
+    padding: 5px 7px;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    min-width: 44px;
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.12s;
+    touch-action: manipulation;
+  }
+
+  .couple-badge.has-couple {
+    background: rgba(63,185,80,0.15);
+    border-color: var(--coupled);
+    color: var(--coupled);
+  }
+
+  .couple-badge.no-couple {
+    background: transparent;
+    border-color: var(--border);
+    color: var(--text-dim);
+  }
+
+  /* ── COUPLE MODAL ── */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(2px);
+  }
+
+  .modal-overlay.open { display: flex; }
+
+  .modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    width: 340px;
+    max-width: 95vw;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  }
+
+  .modal h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .modal p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 16px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .partner-list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+    max-height: 280px;
+    overflow-y: auto;
+    margin-bottom: 16px;
+    padding-right: 4px;
+  }
+
+  .partner-list::-webkit-scrollbar { width: 4px; }
+  .partner-list::-webkit-scrollbar-track { background: var(--bg); }
+  .partner-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .partner-btn {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    padding: 10px 4px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    transition: border-color 0.12s, background 0.12s;
+    min-height: 44px;
+    touch-action: manipulation;
+  }
+
+  .partner-btn:hover { border-color: var(--text-dim); background: #1e242d; }
+
+  .partner-btn.selected {
+    background: rgba(63,185,80,0.2);
+    border-color: var(--coupled);
+    color: var(--coupled);
+  }
+
+  .partner-btn.taken {
+    opacity: 0.35;
+    cursor: not-allowed;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+  }
+
+  /* ── COUPLE VIEW TABLE ── */
+  .couple-table-section {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .couple-table-section h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.85rem;
+  }
+
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    border-bottom: 1px solid var(--border);
+  }
+
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #1e242d; }
+
+  .couple-dot {
+    display: inline-block;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--coupled);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  .solo-tag {
+    color: var(--text-dim);
+    font-size: 0.75rem;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .tram-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-block">
+    <h1>🚃 Fleet Tracker</h1>
+    <p>TRAM ROLLING STOCK — 160 UNITS</p>
+  </div>
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val citadis" id="stat-citadis">0</div>
+      <div class="stat-label">Citadis ✓</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val urbos" id="stat-urbos">0</div>
+      <div class="stat-label">Urbos ✓</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val ok" id="stat-couples">0</div>
+      <div class="stat-label">Couples</div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <label>Select all:</label>
+  <button class="btn" onclick="selectAll('citadis')">Citadis 001–046</button>
+  <button class="btn" onclick="selectAll('urbos')">Urbos 047–160</button>
+  <button class="btn" onclick="selectAll('all')">All</button>
+  <button class="btn danger" onclick="clearAll()">Clear All</button>
+</div>
+
+<div class="controls" style="margin-bottom:32px; border-top:1px solid var(--border); padding-top:14px;">
+  <label>Data:</label>
+  <button class="btn" onclick="exportJSON()" title="Download state as a JSON backup file">⬇ Export</button>
+  <button class="btn" onclick="document.getElementById('import-input').click()" title="Load a previously exported JSON file">⬆ Import</button>
+  <input type="file" id="import-input" accept=".json" style="display:none" onchange="importJSON(event)">
+  <span id="save-indicator" style="font-family:'Share Tech Mono',monospace;font-size:0.75rem;color:var(--text-dim);margin-left:6px;"></span>
+</div>
+
+<!-- CITADIS SECTION -->
+<div class="fleet-section">
+  <div class="section-header">
+    <h2>Alstom Citadis 302</h2>
+    <span class="model-badge badge-citadis">001 – 046 · 46 UNITS</span>
+  </div>
+  <div class="tram-grid" id="grid-citadis"></div>
+</div>
+
+<!-- URBOS SECTION -->
+<div class="fleet-section">
+  <div class="section-header">
+    <h2>CAF Urbos 100</h2>
+    <span class="model-badge badge-urbos">047 – 160 · 114 UNITS</span>
+  </div>
+  <div class="tram-grid" id="grid-urbos"></div>
+</div>
+
+<!-- COUPLE SUMMARY TABLE -->
+<div class="couple-table-section">
+  <h2>📋 Couple Register</h2>
+  <table id="couple-table">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Unit A</th>
+        <th>Unit B</th>
+        <th>Model</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="couple-tbody"></tbody>
+  </table>
+</div>
+
+<!-- COUPLE MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal">
+    <h3 id="modal-title">Assign Couple</h3>
+    <p id="modal-sub">Select a partner unit</p>
+    <div class="partner-list" id="partner-list"></div>
+    <div class="modal-actions">
+      <button class="btn danger" id="btn-uncouple" onclick="uncouple()">Uncouple</button>
+      <button class="btn" onclick="closeModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CONSTANTS ──
+const CITADIS = Array.from({length: 46},  (_, i) => String(i + 1).padStart(3, '0'));
+const URBOS   = Array.from({length: 114}, (_, i) => String(i + 47).padStart(3, '0'));
+const ALL     = [...CITADIS, ...URBOS];
+const LS_KEY  = 'tramFleetTracker_v1';
+
+// ── STATE ──
+const state = {
+  checked: new Set(),
+  couples: {}
+};
+
+let modalTram = null;
+let saveTimer = null;
+
+// ── PERSISTENCE: localStorage (auto-save on every change) ──
+function saveState() {
+  const payload = {
+    checked: [...state.checked],
+    couples: state.couples,
+    savedAt: new Date().toISOString()
+  };
+  try {
+    localStorage.setItem(LS_KEY, JSON.stringify(payload));
+    showIndicator(`✔ Auto-saved ${fmtTime(payload.savedAt)}`);
+  } catch(e) {
+    showIndicator('⚠ localStorage unavailable — use Export to save');
+  }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return false;
+    const payload = JSON.parse(raw);
+    state.checked = new Set(payload.checked || []);
+    state.couples  = payload.couples || {};
+    showIndicator(`✔ Restored from ${fmtTime(payload.savedAt)}`);
+    return true;
+  } catch(e) {
+    return false;
+  }
+}
+
+function fmtTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleString([], {dateStyle:'short', timeStyle:'short'});
+}
+
+function showIndicator(msg) {
+  const el = document.getElementById('save-indicator');
+  el.textContent = msg;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(() => { el.textContent = ''; }, 4000);
+}
+
+// ── EXPORT / IMPORT JSON ──
+function exportJSON() {
+  const payload = {
+    appVersion: 1,
+    exportedAt: new Date().toISOString(),
+    checked: [...state.checked],
+    couples: state.couples
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `tram-fleet-${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function importJSON(evt) {
+  const file = evt.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const payload = JSON.parse(e.target.result);
+      if (!payload.checked || !payload.couples) throw new Error('Invalid file format');
+      state.checked = new Set(payload.checked);
+      state.couples  = payload.couples;
+      applyStateToDOM();
+      saveState();
+      showIndicator(`✔ Imported from ${fmtTime(payload.exportedAt)}`);
+    } catch(err) {
+      alert('Import failed: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+  evt.target.value = ''; // reset so same file can be re-imported
+}
+
+// ── APPLY STATE → DOM (used on load and after import) ──
+function applyStateToDOM() {
+  ALL.forEach(id => {
+    const chk = document.getElementById(`chk-${id}`);
+    if (chk) chk.checked = state.checked.has(id);
+  });
+  updateCoupleUI();
+  updateStats();
+}
+
+// ── BUILD GRID ──
+function buildGrid(ids, gridId, model) {
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = '';
+  ids.forEach(id => {
+    const card = document.createElement('div');
+    card.className = `tram-card ${model}-card`;
+    card.id = `card-${id}`;
+    card.innerHTML = `
+      <input type="checkbox" class="tram-check" id="chk-${id}" onchange="toggle('${id}')">
+      <label class="tram-num" for="chk-${id}">${id}</label>
+      <div class="couple-wrap">
+        <span class="couple-badge no-couple" id="cpbadge-${id}" onclick="openModal('${id}')">—</span>
+      </div>`;
+    grid.appendChild(card);
+  });
+}
+
+buildGrid(CITADIS, 'grid-citadis', 'citadis');
+buildGrid(URBOS,   'grid-urbos',   'urbos');
+
+// ── TOGGLE ──
+function toggle(id) {
+  const chk = document.getElementById(`chk-${id}`);
+  if (chk.checked) state.checked.add(id);
+  else state.checked.delete(id);
+  updateStats();
+  saveState();
+}
+
+// ── SELECT / CLEAR ──
+function selectAll(group) {
+  const ids = group === 'citadis' ? CITADIS : group === 'urbos' ? URBOS : ALL;
+  ids.forEach(id => {
+    state.checked.add(id);
+    document.getElementById(`chk-${id}`).checked = true;
+  });
+  updateStats();
+  saveState();
+}
+
+function clearAll() {
+  if (!confirm('Clear all checkboxes and couple assignments?')) return;
+  state.checked = new Set();
+  state.couples  = {};
+  ALL.forEach(id => {
+    document.getElementById(`chk-${id}`).checked = false;
+  });
+  updateCoupleUI();
+  updateStats();
+  saveState();
+}
+
+// ── COUPLE MODAL ──
+function openModal(id) {
+  modalTram = id;
+  const isCitadis = CITADIS.includes(id);
+  const pool = isCitadis ? CITADIS : URBOS;
+  const currentPartner = state.couples[id];
+
+  document.getElementById('modal-title').textContent = `Couple for Unit ${id}`;
+  document.getElementById('modal-sub').textContent =
+    `Model: ${isCitadis ? 'Alstom Citadis 302' : 'CAF Urbos 100'} · Same-model only`;
+
+  const list = document.getElementById('partner-list');
+  list.innerHTML = '';
+
+  pool.forEach(pid => {
+    if (pid === id) return;
+    const btn = document.createElement('button');
+    btn.className = 'partner-btn';
+    btn.textContent = pid;
+
+    const partnerOfPid = state.couples[pid];
+    if (partnerOfPid && partnerOfPid !== id) {
+      btn.classList.add('taken');
+      btn.title = `Already coupled with ${partnerOfPid}`;
+    } else if (pid === currentPartner) {
+      btn.classList.add('selected');
+    }
+
+    btn.onclick = () => { if (!btn.classList.contains('taken')) selectPartner(pid); };
+    list.appendChild(btn);
+  });
+
+  document.getElementById('btn-uncouple').style.display = currentPartner ? 'inline-block' : 'none';
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function selectPartner(pid) {
+  const prev = state.couples[modalTram];
+  if (prev) { delete state.couples[prev]; delete state.couples[modalTram]; }
+  state.couples[modalTram] = pid;
+  state.couples[pid]       = modalTram;
+  updateCoupleUI();
+  closeModal();
+  saveState();
+}
+
+function uncouple() {
+  const partner = state.couples[modalTram];
+  if (partner) { delete state.couples[partner]; delete state.couples[modalTram]; }
+  updateCoupleUI();
+  closeModal();
+  saveState();
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+  modalTram = null;
+}
+
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── UPDATE COUPLE BADGES ──
+function updateCoupleUI() {
+  ALL.forEach(id => {
+    const badge = document.getElementById(`cpbadge-${id}`);
+    const partner = state.couples[id];
+    if (partner) {
+      badge.textContent = partner;
+      badge.className = 'couple-badge has-couple';
+    } else {
+      badge.textContent = '—';
+      badge.className = 'couple-badge no-couple';
+    }
+  });
+  renderCoupleTable();
+}
+
+// ── STATS ──
+function updateStats() {
+  const citadisChecked = CITADIS.filter(id => state.checked.has(id)).length;
+  const urbosChecked   = URBOS.filter(id => state.checked.has(id)).length;
+  const seen = new Set();
+  let coupleCount = 0;
+  Object.entries(state.couples).forEach(([a, b]) => {
+    const key = [a, b].sort().join('-');
+    if (!seen.has(key)) { seen.add(key); coupleCount++; }
+  });
+  document.getElementById('stat-citadis').textContent = citadisChecked;
+  document.getElementById('stat-urbos').textContent   = urbosChecked;
+  document.getElementById('stat-couples').textContent  = coupleCount;
+}
+
+// ── COUPLE TABLE ──
+function renderCoupleTable() {
+  const tbody = document.getElementById('couple-tbody');
+  tbody.innerHTML = '';
+  const seen = new Set();
+  let row = 1;
+
+  ALL.forEach(id => {
+    const partner = state.couples[id];
+    if (partner) {
+      const key = [id, partner].sort().join('-');
+      if (!seen.has(key)) {
+        seen.add(key);
+        const model = CITADIS.includes(id) ? 'Citadis 302' : 'Urbos 100';
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td>${row++}</td>
+          <td>${id}</td>
+          <td>${partner}</td>
+          <td><span class="model-badge ${CITADIS.includes(id) ? 'badge-citadis' : 'badge-urbos'}">${model}</span></td>
+          <td><span class="couple-dot"></span>Coupled</td>`;
+        tbody.appendChild(tr);
+      }
+    } else {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>—</td>
+        <td>${id}</td>
+        <td><span class="solo-tag">unassigned</span></td>
+        <td><span class="model-badge ${CITADIS.includes(id) ? 'badge-citadis' : 'badge-urbos'}">${CITADIS.includes(id) ? 'Citadis 302' : 'Urbos 100'}</span></td>
+        <td><span class="solo-tag">Solo / Standby</span></td>`;
+      tbody.appendChild(tr);
+    }
+  });
+  updateStats();
+}
+
+// ── INIT ──
+const restored = loadState();
+applyStateToDOM();
+if (!restored) showIndicator('No saved data found — starting fresh');
+
+// ── SERVICE WORKER (inline blob — enables PWA install + offline) ──
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'tram-fleet-v1';
+    self.addEventListener('install', e => {
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(clients.claim());
+    });
+    self.addEventListener('fetch', e => {
+      // Cache-first for Google Fonts; network-first for everything else
+      if (e.request.url.includes('fonts.googleapis.com') || e.request.url.includes('fonts.gstatic.com')) {
+        e.respondWith(
+          caches.open(CACHE).then(cache =>
+            cache.match(e.request).then(cached =>
+              cached || fetch(e.request).then(res => { cache.put(e.request, res.clone()); return res; })
+            )
+          )
+        );
+      } else {
+        e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+      }
+    });
+  `;
+  const blob = new Blob([swCode], {type: 'application/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {/* SW optional */});
+}
+</script>
+</body>
+</html>
