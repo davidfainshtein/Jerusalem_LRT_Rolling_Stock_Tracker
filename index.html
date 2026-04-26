@@ -435,9 +435,212 @@
     font-size: 0.75rem;
   }
 
+  /* ── HISTORY LOG ── */
+  .history-section {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  .history-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+
+  .history-header h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .history-controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .history-filter {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    border-radius: 4px;
+    min-height: 36px;
+    touch-action: manipulation;
+  }
+
+  .history-filter option { background: var(--panel); }
+
+  .history-search {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.78rem;
+    padding: 6px 10px;
+    border-radius: 4px;
+    min-height: 36px;
+    width: 120px;
+    outline: none;
+  }
+
+  .history-search:focus { border-color: var(--text-dim); }
+  .history-search::placeholder { color: var(--text-dim); }
+
+  .history-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 480px;
+    overflow-y: auto;
+    padding-right: 4px;
+  }
+
+  .history-list::-webkit-scrollbar { width: 4px; }
+  .history-list::-webkit-scrollbar-track { background: var(--bg); }
+  .history-list::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+  .history-entry {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 14px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px 14px;
+    align-items: start;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .history-entry::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+  }
+
+  .history-entry.ev-coupled::before    { background: var(--coupled); }
+  .history-entry.ev-uncoupled::before  { background: var(--error); }
+  .history-entry.ev-recoupled::before  { background: var(--urbos); }
+
+  .history-icon {
+    font-size: 1rem;
+    line-height: 1.4;
+    grid-row: span 2;
+    align-self: center;
+  }
+
+  .history-main {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .history-units {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text);
+  }
+
+  .history-action {
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  .ev-coupled   .history-action { background: rgba(63,185,80,0.15);  color: var(--coupled); border: 1px solid var(--coupled); }
+  .ev-uncoupled .history-action { background: rgba(248,81,73,0.15);   color: var(--error);   border: 1px solid var(--error); }
+  .ev-recoupled .history-action { background: rgba(247,127,0,0.15);   color: var(--urbos);   border: 1px solid var(--urbos); }
+
+  .history-note {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    font-style: italic;
+    grid-column: 2;
+    margin-top: 2px;
+  }
+
+  .history-note:empty { display: none; }
+
+  .history-time {
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    white-space: nowrap;
+    align-self: center;
+  }
+
+  .history-empty {
+    text-align: center;
+    color: var(--text-dim);
+    font-family: 'Share Tech Mono', monospace;
+    font-size: 0.8rem;
+    padding: 32px 0;
+  }
+
+  /* ── NOTE MODAL ── */
+  .note-modal {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 24px;
+    width: 360px;
+    max-width: 95vw;
+    box-shadow: 0 0 40px rgba(0,0,0,0.6);
+  }
+
+  .note-modal h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .note-modal p {
+    font-size: 0.8rem;
+    color: var(--text-dim);
+    margin-bottom: 14px;
+    font-family: 'Share Tech Mono', monospace;
+  }
+
+  .note-input {
+    width: 100%;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    color: var(--text);
+    font-family: 'Rajdhani', sans-serif;
+    font-size: 0.95rem;
+    padding: 10px 12px;
+    border-radius: 5px;
+    resize: vertical;
+    min-height: 80px;
+    outline: none;
+    margin-bottom: 14px;
+  }
+
+  .note-input:focus { border-color: var(--text-dim); }
+  .note-input::placeholder { color: var(--text-dim); }
+
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
     .tram-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
+    .history-entry { grid-template-columns: auto 1fr; }
+    .history-time { grid-column: 2; font-size: 0.65rem; }
   }
 </style>
 </head>
@@ -515,6 +718,38 @@
   </table>
 </div>
 
+<!-- HISTORY LOG -->
+<div class="history-section">
+  <div class="history-header">
+    <h2>🕐 Coupling History</h2>
+    <div class="history-controls">
+      <input class="history-search" id="history-search" type="text" placeholder="Unit #…" oninput="renderHistory()">
+      <select class="history-filter" id="history-filter" onchange="renderHistory()">
+        <option value="all">All events</option>
+        <option value="coupled">Coupled</option>
+        <option value="uncoupled">Uncoupled</option>
+        <option value="recoupled">Re-coupled</option>
+      </select>
+      <button class="btn" onclick="exportHistoryCSV()" title="Download history as CSV">⬇ CSV</button>
+      <button class="btn danger" onclick="clearHistory()">Clear Log</button>
+    </div>
+  </div>
+  <div class="history-list" id="history-list"></div>
+</div>
+
+<!-- NOTE MODAL (shown before committing couple/uncouple) -->
+<div class="modal-overlay" id="note-overlay">
+  <div class="note-modal">
+    <h3 id="note-title">Add a Note</h3>
+    <p id="note-sub">Optional — describe the reason for this change</p>
+    <textarea class="note-input" id="note-input" placeholder="e.g. Scheduled maintenance, driver request, fault on unit…" maxlength="200"></textarea>
+    <div class="modal-actions">
+      <button class="btn" onclick="confirmPendingAction()">Confirm</button>
+      <button class="btn danger" onclick="cancelPendingAction()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- COUPLE MODAL -->
 <div class="modal-overlay" id="modal-overlay">
   <div class="modal">
@@ -538,18 +773,146 @@ const LS_KEY  = 'tramFleetTracker_v1';
 // ── STATE ──
 const state = {
   checked: new Set(),
-  couples: {}
+  couples: {},
+  history: []   // [{id, type, unitA, unitB, note, ts}]
 };
 
-let modalTram = null;
-let saveTimer = null;
+let modalTram    = null;
+let saveTimer    = null;
+let pendingAction = null; // {type:'couple'|'uncouple'|'recouple', unitA, unitB, prevPartner}
 
-// ── PERSISTENCE: localStorage (auto-save on every change) ──
+// ── HISTORY HELPERS ──
+function logEvent(type, unitA, unitB, note = '') {
+  state.history.unshift({
+    id:    Date.now() + Math.random(),
+    type,       // 'coupled' | 'uncoupled' | 'recoupled'
+    unitA,
+    unitB,
+    note: note.trim(),
+    ts:    new Date().toISOString()
+  });
+  renderHistory();
+}
+
+const EV_ICON = { coupled: '🔗', uncoupled: '✂️', recoupled: '🔄' };
+const EV_LABEL = { coupled: 'Coupled', uncoupled: 'Uncoupled', recoupled: 'Re-coupled' };
+
+function renderHistory() {
+  const list    = document.getElementById('history-list');
+  const filter  = document.getElementById('history-filter').value;
+  const search  = document.getElementById('history-search').value.trim().toLowerCase();
+
+  let entries = state.history.filter(e => {
+    if (filter !== 'all' && e.type !== filter) return false;
+    if (search && !e.unitA.includes(search) && !(e.unitB || '').includes(search)) return false;
+    return true;
+  });
+
+  if (entries.length === 0) {
+    list.innerHTML = `<div class="history-empty">No events recorded yet — couple or uncouple units to start the log.</div>`;
+    return;
+  }
+
+  list.innerHTML = entries.map(e => `
+    <div class="history-entry ev-${e.type}">
+      <span class="history-icon">${EV_ICON[e.type]}</span>
+      <div class="history-main">
+        <span class="history-units">${e.unitA}${e.unitB ? ' ↔ ' + e.unitB : ''}</span>
+        <span class="history-action">${EV_LABEL[e.type]}</span>
+      </div>
+      <span class="history-time">${fmtTimeFull(e.ts)}</span>
+      <div class="history-note">${escHtml(e.note)}</div>
+    </div>`).join('');
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function fmtTimeFull(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleString([], {month:'2-digit', day:'2-digit', hour:'2-digit', minute:'2-digit'});
+}
+
+function exportHistoryCSV() {
+  const rows = [['Timestamp','Event','Unit A','Unit B','Note']];
+  state.history.forEach(e => {
+    rows.push([e.ts, e.type, e.unitA, e.unitB || '', `"${(e.note || '').replace(/"/g,'""')}"`]);
+  });
+  const csv = rows.map(r => r.join(',')).join('\n');
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `coupling-history-${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function clearHistory() {
+  if (!confirm('Clear the entire coupling history log? This cannot be undone.')) return;
+  state.history = [];
+  renderHistory();
+  saveState();
+}
+
+// ── NOTE MODAL (intercepts couple/uncouple actions) ──
+function openNoteModal(title, sub, action) {
+  pendingAction = action;
+  document.getElementById('note-title').textContent = title;
+  document.getElementById('note-sub').textContent   = sub;
+  document.getElementById('note-input').value       = '';
+  document.getElementById('note-overlay').classList.add('open');
+  setTimeout(() => document.getElementById('note-input').focus(), 100);
+}
+
+function confirmPendingAction() {
+  const note = document.getElementById('note-input').value;
+  document.getElementById('note-overlay').classList.remove('open');
+  if (!pendingAction) return;
+  const { type, unitA, unitB, prevPartner } = pendingAction;
+  pendingAction = null;
+
+  if (type === 'couple' || type === 'recouple') {
+    // Remove old partnerships silently
+    if (prevPartner) { delete state.couples[prevPartner]; delete state.couples[unitA]; }
+    const partnerPrev = state.couples[unitB];
+    if (partnerPrev) { delete state.couples[partnerPrev]; delete state.couples[unitB]; }
+    state.couples[unitA] = unitB;
+    state.couples[unitB] = unitA;
+    logEvent(type, unitA, unitB, note);
+  } else if (type === 'uncouple') {
+    delete state.couples[unitA];
+    delete state.couples[unitB];
+    logEvent('uncoupled', unitA, unitB, note);
+  }
+
+  updateCoupleUI();
+  closeModal();
+  saveState();
+}
+
+function cancelPendingAction() {
+  pendingAction = null;
+  document.getElementById('note-overlay').classList.remove('open');
+}
+
+document.getElementById('note-overlay').addEventListener('click', function(e) {
+  if (e.target === this) cancelPendingAction();
+});
+
+// allow Enter key to confirm (Shift+Enter = newline)
+document.getElementById('note-input').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); confirmPendingAction(); }
+});
+
+// ── PERSISTENCE ──
 function saveState() {
   const payload = {
-    checked: [...state.checked],
-    couples: state.couples,
-    savedAt: new Date().toISOString()
+    checked:  [...state.checked],
+    couples:  state.couples,
+    history:  state.history,
+    savedAt:  new Date().toISOString()
   };
   try {
     localStorage.setItem(LS_KEY, JSON.stringify(payload));
@@ -566,6 +929,7 @@ function loadState() {
     const payload = JSON.parse(raw);
     state.checked = new Set(payload.checked || []);
     state.couples  = payload.couples || {};
+    state.history  = payload.history || [];
     showIndicator(`✔ Restored from ${fmtTime(payload.savedAt)}`);
     return true;
   } catch(e) {
@@ -589,10 +953,11 @@ function showIndicator(msg) {
 // ── EXPORT / IMPORT JSON ──
 function exportJSON() {
   const payload = {
-    appVersion: 1,
+    appVersion: 2,
     exportedAt: new Date().toISOString(),
-    checked: [...state.checked],
-    couples: state.couples
+    checked:    [...state.checked],
+    couples:    state.couples,
+    history:    state.history
   };
   const blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json'});
   const a = document.createElement('a');
@@ -612,6 +977,7 @@ function importJSON(evt) {
       if (!payload.checked || !payload.couples) throw new Error('Invalid file format');
       state.checked = new Set(payload.checked);
       state.couples  = payload.couples;
+      state.history  = payload.history || [];
       applyStateToDOM();
       saveState();
       showIndicator(`✔ Imported from ${fmtTime(payload.exportedAt)}`);
@@ -620,10 +986,10 @@ function importJSON(evt) {
     }
   };
   reader.readAsText(file);
-  evt.target.value = ''; // reset so same file can be re-imported
+  evt.target.value = '';
 }
 
-// ── APPLY STATE → DOM (used on load and after import) ──
+// ── APPLY STATE → DOM ──
 function applyStateToDOM() {
   ALL.forEach(id => {
     const chk = document.getElementById(`chk-${id}`);
@@ -631,6 +997,7 @@ function applyStateToDOM() {
   });
   updateCoupleUI();
   updateStats();
+  renderHistory();
 }
 
 // ── BUILD GRID ──
@@ -723,21 +1090,34 @@ function openModal(id) {
 }
 
 function selectPartner(pid) {
-  const prev = state.couples[modalTram];
-  if (prev) { delete state.couples[prev]; delete state.couples[modalTram]; }
-  state.couples[modalTram] = pid;
-  state.couples[pid]       = modalTram;
-  updateCoupleUI();
-  closeModal();
-  saveState();
+  const prevPartner = state.couples[modalTram];
+  const isRecouple  = !!prevPartner && prevPartner !== pid;
+  const eventType   = isRecouple ? 'recouple' : 'couple';
+  const unitA       = modalTram;
+
+  // Close partner picker modal first
+  document.getElementById('modal-overlay').classList.remove('open');
+
+  // Open note modal
+  openNoteModal(
+    isRecouple ? `Re-couple Unit ${unitA}` : `Couple Units ${unitA} ↔ ${pid}`,
+    isRecouple
+      ? `Changing partner from ${prevPartner} → ${pid}`
+      : `Units ${unitA} and ${pid} will be coupled`,
+    { type: eventType, unitA, unitB: pid, prevPartner }
+  );
 }
 
 function uncouple() {
   const partner = state.couples[modalTram];
-  if (partner) { delete state.couples[partner]; delete state.couples[modalTram]; }
-  updateCoupleUI();
-  closeModal();
-  saveState();
+  const unitA   = modalTram;
+  document.getElementById('modal-overlay').classList.remove('open');
+
+  openNoteModal(
+    `Uncouple Units ${unitA} ↔ ${partner}`,
+    'These units will be set to solo / standby',
+    { type: 'uncouple', unitA, unitB: partner }
+  );
 }
 
 function closeModal() {
@@ -826,14 +1206,9 @@ if (!restored) showIndicator('No saved data found — starting fresh');
 if ('serviceWorker' in navigator) {
   const swCode = `
     const CACHE = 'tram-fleet-v1';
-    self.addEventListener('install', e => {
-      self.skipWaiting();
-    });
-    self.addEventListener('activate', e => {
-      e.waitUntil(clients.claim());
-    });
+    self.addEventListener('install', e => { self.skipWaiting(); });
+    self.addEventListener('activate', e => { e.waitUntil(clients.claim()); });
     self.addEventListener('fetch', e => {
-      // Cache-first for Google Fonts; network-first for everything else
       if (e.request.url.includes('fonts.googleapis.com') || e.request.url.includes('fonts.gstatic.com')) {
         e.respondWith(
           caches.open(CACHE).then(cache =>
@@ -849,7 +1224,7 @@ if ('serviceWorker' in navigator) {
   `;
   const blob = new Blob([swCode], {type: 'application/javascript'});
   const swUrl = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl).catch(() => {/* SW optional */});
+  navigator.serviceWorker.register(swUrl).catch(() => {});
 }
 </script>
 </body>
