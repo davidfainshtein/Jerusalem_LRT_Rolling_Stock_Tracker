@@ -1,26 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" content="#0d1117">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Fleet Tracker">
-<meta name="description" content="Tram rolling stock fleet tracker — 160 units">
-<link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Tram%20Fleet%20Tracker%22%2C%22short_name%22%3A%22Fleet%22%2C%22description%22%3A%22Tram%20rolling%20stock%20tracker%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230d1117%22%2C%22theme_color%22%3A%22%230d1117%22%2C%22orientation%22%3A%22portrait-primary%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%3D%270%200%20512%20512%2527%253E%253Crect%2520width%3D%2527512%2527%2520height%3D%2527512%2527%2520rx%3D%2527100%2527%2520fill%3D%2527%25230d1117%2527%2F%253E%253Ctext%2520x%3D%2527256%2527%2520y%3D%2527340%2527%2520font-size%3D%2527300%2527%2520text-anchor%3D%2527middle%2527%253E%25F0%259F%259A%2583%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
-<title>Tram Fleet Tracker</title>
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
-
-  :root {
-    --bg: #0d1117;
-    --panel: #161b22;
-    --border: #21262d;
-    --citadis: #00b4d8;
-    --citadis-dim: #003d4d;
-    --urbos: #f77f00;
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0d1117">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Fleet Tracker">
+    <meta name="description" content="Tram rolling stock fleet tracker — 160 units">
+    <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Tram%20Fleet%20Tracker%22%2C%22short_name%22%3A%22Fleet%22%2C%22description%22%3A%22Tram%20rolling%20stock%20tracker%22%2C%22start_url%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%230d1117%22%2C%22theme_color%22%3A%22%230d1117%22%2C%22orientation%22%3A%22portrait-primary%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%3D%2527http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%2527%2520viewBox%3D%270%200%20512%20512%2527%253E%253Crect%2520width%3D%2527512%2527%2520height%3D%2527512%2527%2520rx%3D%2527100%2527%2520fill%3D%2527%25230d1117%2527%2F%253E%253Ctext%2520x%3D%2527256%2527%2520y%3D%2527340%2527%2520font-size%3D%2527300%2527%2520text-anchor%3D%2527middle%2527%253E%25F0%259F%259A%2583%253C%2Ftext%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+    <title>Tram Fleet Tracker</title>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+      
+      :root {
+        --bg: #0d1117;
+        --panel: #161b22;
+        --border: #21262d;
+        --citadis: #00b4d8;
+        --citadis-dim: #003d4d;
+        --urbos: #f77f00;
     --urbos-dim: #4d2900;
     --accent: #238636;
     --text: #c9d1d9;
@@ -512,7 +512,7 @@
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 6px;
-	min-height: 80px;
+	min-height: 130px;
     padding: 10px 14px;
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -643,7 +643,7 @@
     .history-entry { grid-template-columns: auto 1fr; grid-template-rows: auto auto auto; }
     .history-main  { grid-column: 2; grid-row: 1; }
     .history-time  { grid-column: 3; grid-row: 2; font-size: 0.65rem; }
-    .history-note  { grid-column: 2; grid-row: 3; margin-top: 2px; }
+    .history-note  { grid-column: 2; grid-row: 3; margin-right: 2px; }
   }
 </style>
 </head>
