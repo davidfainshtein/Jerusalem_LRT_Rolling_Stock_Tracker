@@ -512,7 +512,7 @@
     background: var(--panel);
     border: 1px solid var(--border);
     border-radius: 6px;
-    min-height: 60px;
+	min-height: 80px;
     padding: 10px 14px;
     display: grid;
     grid-template-columns: auto 1fr auto;
@@ -640,8 +640,10 @@
   /* ── RESPONSIVE ── */
   @media (max-width: 600px) {
     .tram-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-    .history-entry { grid-template-columns: auto 1fr; }
-    .history-time { grid-column: 2; font-size: 0.65rem; }
+    .history-entry { grid-template-columns: auto 1fr; grid-template-rows: auto auto auto; }
+    .history-main  { grid-column: 2; grid-row: 1; }
+    .history-time  { grid-column: 3; grid-row: 2; font-size: 0.65rem; }
+    .history-note  { grid-column: 2; grid-row: 3; margin-top: 2px; }
   }
 </style>
 </head>
